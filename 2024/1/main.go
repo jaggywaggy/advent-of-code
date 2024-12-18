@@ -12,17 +12,12 @@ import (
 	"strconv"
 	"bufio"
 	"sort"
+	"advent-of-code/common"
 )
 
 type LocationIds struct {
 	X []int
 	Y []int
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
 
 func loadLocationIds(file string) LocationIds {
@@ -31,7 +26,7 @@ func loadLocationIds(file string) LocationIds {
 
 	// first, open our file.
 	data, err := os.Open(file)
-	checkErr(err)
+	common.CheckErr(err)
 	// close file upon scope exit.
 	defer data.Close()
 	// next, create a scanner scanning for words (default).
@@ -45,13 +40,13 @@ func loadLocationIds(file string) LocationIds {
 			// second number, append to Y.
 			i = 0
 			num, err := strconv.Atoi(scanner.Text()) 	// int to str.
-			checkErr(err)
+			common.CheckErr(err)
 			tokensY = append(tokensY, num)						// append slice.
 		} else {
 			// first number, append to Y.
 			i++
 			num, err := strconv.Atoi(scanner.Text()) 	// int to str.
-			checkErr(err)
+			common.CheckErr(err)
 			tokensX = append(tokensX, num)						// append slice.
 		}
 	}
@@ -73,14 +68,6 @@ func calculateDiff(x []int, y []int) []int {
 	return result
 }
 
-func sumOfIntSlice(toSum []int) int {
-	var sum int
-	for i := 0; i < len(toSum); i++ {
-		sum += toSum[i]
-	}
-	return sum
-}
-
 func main() {
 	var diffSlice []int
 	file := "ids.txt"
@@ -95,7 +82,7 @@ func main() {
 	// gather our diffs
 	diffSlice = calculateDiff(locationIds.X, locationIds.Y)
 	// sum our diffs
-	sum := sumOfIntSlice(diffSlice)
+	sum := common.SumOfIntSlice(diffSlice)
 	fmt.Println(sum)
 	// out: 2769675
 }
