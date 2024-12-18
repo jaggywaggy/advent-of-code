@@ -70,7 +70,7 @@ func calculateDiff(x []int, y []int) []int {
 
 func main() {
 	var diffSlice []int
-	file := "ids.txt"
+	file := "2024/1/ids.txt"
 	locationIds := loadLocationIds(file)
 	// now we have our two lists. We will need to sort them (ascending).
 	sort.Slice(locationIds.X, func(i, j int) bool {
