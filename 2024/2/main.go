@@ -21,20 +21,61 @@ func parseLineToIntSlice(line string) []int {
 }
 
 func isSafe(lineSlice []int) bool {
+    inc := false
+    dec := false
+    safe := true
+    removed := false
     for i := 0; i < len(lineSlice); i++ {
+        fmt.Print("i")
+        fmt.Println(i)
+        fmt.Print("line: ")
+        fmt.Println(lineSlice)
+        fmt.Print("currently safe: ")
+        fmt.Println(safe)
         if i + 1 == len(lineSlice) {
             break
         }
         x := lineSlice[i]
         y := lineSlice[i+1]
-        if x < y && y - x > 3 {
-            return false
+        if x < y {
+            inc = true
         }
-        if y < x && x - y > 3 {
-            return false
+        if x > y {
+            dec = true
+        }
+        if inc && dec && !removed {
+            removed = true
+            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
+            i = 0
+        } else if inc && dec && removed {
+            safe = false
+        }
+        if y - x > 3 && !removed {
+            removed = true
+            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
+            i = 0
+        } else if y - x > 3 && removed {
+            safe = false
+        }
+        if x - y > 3 && !removed {
+            removed = true
+            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
+            i = 0
+        } else if x - y > 3 && removed {
+            safe = false
+        }
+        if x == y && !removed {
+            removed = true
+            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
+            i = 0
+        } else if x == y && removed {
+            safe = false
+        }
+        if !safe {
+            break
         }
     }
-    return true
+    return safe
 }
 
 func calcReport(file string) int {
@@ -55,7 +96,7 @@ func calcReport(file string) int {
 }
 
 func main() {
-    count := calcReport("2024/2/reports.txt")
+    count := calcReport("2024/2/example.txt")
     fmt.Println(count)
 }
 
