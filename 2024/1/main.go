@@ -41,13 +41,13 @@ func loadLocationIds(file string) LocationIds {
       i = 0
       num, err := strconv.Atoi(scanner.Text()) 	// int to str.
       common.CheckErr(err)
-      tokensY = append(tokensY, num)						// append slice.
+      tokensY = append(tokensY, num)            // append slice.
     } else {
       // first number, append to Y.
       i++
       num, err := strconv.Atoi(scanner.Text()) 	// int to str.
       common.CheckErr(err)
-      tokensX = append(tokensX, num)						// append slice.
+      tokensX = append(tokensX, num)            // append slice.
     }
   }
 
@@ -72,6 +72,7 @@ func main() {
   var diffSlice []int
   file := "2024/1/ids.txt"
   locationIds := loadLocationIds(file)
+
   // now we have our two lists. We will need to sort them (ascending).
   sort.Slice(locationIds.X, func(i, j int) bool {
     return locationIds.X[i] < locationIds.X[j]
@@ -79,8 +80,10 @@ func main() {
   sort.Slice(locationIds.Y, func(i, j int) bool {
     return locationIds.Y[i] < locationIds.Y[j]
   })
+
   // gather our diffs
   diffSlice = calculateDiff(locationIds.X, locationIds.Y)
+
   // sum our diffs
   sum := common.SumOfIntSlice(diffSlice)
   fmt.Println(sum)
