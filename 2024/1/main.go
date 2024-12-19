@@ -68,6 +68,18 @@ func calculateDiff(x []int, y []int) []int {
   return result
 }
 
+func calculateSimilarity(x []int, y []int) {
+    var similarityValues []int
+    for i := 0; i < len(x); i++ {
+        count := 0
+        for j := 0; j < len(x); j++ {
+            if x[i] == y[j] {
+                count++
+            }
+        }
+    }
+}
+
 func main() {
   var diffSlice []int
   file := "2024/1/ids.txt"
@@ -88,5 +100,7 @@ func main() {
   sum := common.SumOfIntSlice(diffSlice)
   fmt.Println(sum)
   // out: 2769675
+
+  fmt.Println(calculateSimilarity(locationIds.X, locationIds.Y))
 }
 
