@@ -68,7 +68,7 @@ func calculateDiff(x []int, y []int) []int {
   return result
 }
 
-func calculateSimilarity(x []int, y []int) {
+func calculateSimilarity(x []int, y []int) int {
     var similarityValues []int
     for i := 0; i < len(x); i++ {
         count := 0
@@ -77,7 +77,9 @@ func calculateSimilarity(x []int, y []int) {
                 count++
             }
         }
+        similarityValues = append(similarityValues, (x[i] * count))
     }
+    return common.SumOfIntSlice(similarityValues)
 }
 
 func main() {
