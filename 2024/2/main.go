@@ -10,72 +10,36 @@ import (
 )
 
 func parseLineToIntSlice(line string) []int {
-    var intSlice []int
-    fields := strings.Fields(line)
-    for _, field := range fields {
-        num, err := strconv.Atoi(field)
-        intSlice = append(intSlice, num)
-        common.CheckErr(err)
-    }
-    return intSlice
+  var intSlice []int
+  fields := strings.Fields(line)
+  for _, field := range fields {
+    num, err := strconv.Atoi(field)
+    intSlice = append(intSlice, num)
+    common.CheckErr(err)
+  }
+  return intSlice
 }
 
 func isSafe(lineSlice []int) bool {
-    inc := false
-    dec := false
-    safe := true
-    removed := false
-    for i := 0; i < len(lineSlice); i++ {
-        fmt.Print("i")
-        fmt.Println(i)
-        fmt.Print("line: ")
-        fmt.Println(lineSlice)
-        fmt.Print("currently safe: ")
-        fmt.Println(safe)
-        if i + 1 == len(lineSlice) {
-            break
-        }
-        x := lineSlice[i]
-        y := lineSlice[i+1]
-        if x < y {
-            inc = true
-        }
-        if x > y {
-            dec = true
-        }
-        if inc && dec && !removed {
-            removed = true
-            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
-            i = 0
-        } else if inc && dec && removed {
-            safe = false
-        }
-        if y - x > 3 && !removed {
-            removed = true
-            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
-            i = 0
-        } else if y - x > 3 && removed {
-            safe = false
-        }
-        if x - y > 3 && !removed {
-            removed = true
-            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
-            i = 0
-        } else if x - y > 3 && removed {
-            safe = false
-        }
-        if x == y && !removed {
-            removed = true
-            lineSlice = append(lineSlice[:i], lineSlice[i+1:]...)
-            i = 0
-        } else if x == y && removed {
-            safe = false
-        }
-        if !safe {
-            break
-        }
+  for i := 0; i < len(lineSlice)-1; i++ {
+    if common.Abs(lineSlice[i]-lineSlice[i+1]) > 3 {
+      return false
     }
-    return safe
+		if i > 0 && ((lineSlice[i] > lineSlice[i-1] && lineSlice[i] > lineSlice[i+1]) || (lineSlice[i] < lineSlice[i-1] && lineSlice[i] < lineSlice[i+1])) {
+      return true
+    }
+  }
+  return true
+}
+
+func canBeMadeSafe(lineSlice []int) bool {
+  for i := 0; i < len(lineSlice); i++ {
+    modifiedSlice := append(lineSlice[:i], lineSlice[i+1:]...)
+    if isSafe(modifiedSlice) {
+      return true
+    }
+  }
+  return false
 }
 
 func calcReport(file string) int {
@@ -85,18 +49,18 @@ func calcReport(file string) int {
   scanner := bufio.NewScanner(data)
   count := 0
   for scanner.Scan() {
-      line := scanner.Text()
-      lineSlice := parseLineToIntSlice(line)
-      if isSafe(lineSlice) {
-          count++
-      }
+    line := scanner.Text()
+    lineSlice := parseLineToIntSlice(line)
+    if isSafe(lineSlice) {
+      count++
+    }
   }
   common.CheckErr(scanner.Err())
   return count
 }
 
 func main() {
-    count := calcReport("2024/2/example.txt")
-    fmt.Println(count)
+  count := calcReport("2024/2/reports.txt")
+  fmt.Println(count)
 }
 
