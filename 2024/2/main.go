@@ -20,26 +20,42 @@ func parseLineToIntSlice(line string) []int {
   return intSlice
 }
 
-func isSafe(lineSlice []int) bool {
-  for i := 0; i < len(lineSlice)-1; i++ {
-    if common.Abs(lineSlice[i]-lineSlice[i+1]) > 3 {
-      return false
+func isSafe(lineSlice []int, isOriginalSlice bool) bool {
+  for i := 0; i < len(lineSlice); i++ {
+    if i + 1 > len(lineSlice) {
+      break
     }
-		if i > 0 && ((lineSlice[i] > lineSlice[i-1] && lineSlice[i] > lineSlice[i+1]) || (lineSlice[i] < lineSlice[i-1] && lineSlice[i] < lineSlice[i+1])) {
-      return true
+    x := common.Abs(lineSlice[i])
+    y := common.Abs(lineSlice[i+1])
+    inc := false
+    dec := false
+    triggerSplit := false
+    if x > y {
+      inc = true
+      if common.Abs(x - y) > 3 {
+        triggerSplit = true
+      }
+    } else {
+      dec = true
+      if common.Abs(y - x) > 3 {
+        triggerSplit = true
+      }
+    }
+    if inc && dec {
+      triggerSplit = true
+    }
+    if triggerSplit && isOriginalSlice {
+      return split(lineSlice, x)
+    } else {
+      return false
     }
   }
   return true
 }
 
-func canBeMadeSafe(lineSlice []int) bool {
-  for i := 0; i < len(lineSlice); i++ {
-    modifiedSlice := append(lineSlice[:i], lineSlice[i+1:]...)
-    if isSafe(modifiedSlice) {
-      return true
-    }
-  }
-  return false
+func split(lineSlice []int, indexToRemove int) bool {
+  lineSlice = append(lineSlice[:indexToRemove], lineSlice[indexToRemove+1:]...)
+  return isSafe(lineSlice, false)
 }
 
 func calcReport(file string) int {
@@ -51,7 +67,7 @@ func calcReport(file string) int {
   for scanner.Scan() {
     line := scanner.Text()
     lineSlice := parseLineToIntSlice(line)
-    if isSafe(lineSlice) {
+    if isSafe(lineSlice, true) {
       count++
     }
   }
